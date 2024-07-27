@@ -43,21 +43,23 @@ extern void SWO_Thread();
 
 TaskHandle_t kDAPTaskHandle = NULL;
 
-
 static const char *MDNS_TAG = "server_common";
 
-void mdns_setup() {
+void mdns_setup()
+{
     // initialize mDNS
     int ret;
     ret = mdns_init();
-    if (ret != ESP_OK) {
+    if (ret != ESP_OK)
+    {
         ESP_LOGW(MDNS_TAG, "mDNS initialize failed:%d", ret);
         return;
     }
 
     // set mDNS hostname
     ret = mdns_hostname_set(MDNS_HOSTNAME);
-    if (ret != ESP_OK) {
+    if (ret != ESP_OK)
+    {
         ESP_LOGW(MDNS_TAG, "mDNS set hostname failed:%d", ret);
         return;
     }
@@ -65,14 +67,16 @@ void mdns_setup() {
 
     // set default mDNS instance name
     ret = mdns_instance_name_set(MDNS_INSTANCE);
-    if (ret != ESP_OK) {
+    if (ret != ESP_OK)
+    {
         ESP_LOGW(MDNS_TAG, "mDNS set instance name failed:%d", ret);
         return;
     }
     ESP_LOGI(MDNS_TAG, "mDNS instance name set to: [%s]", MDNS_INSTANCE);
 }
 
-void app_main() {
+void app_main()
+{
     // struct rst_info *rtc_info = system_get_rst_info();
 
     // os_printf("reset reason: %x\n", rtc_info->reason);
@@ -103,7 +107,6 @@ void app_main() {
     mdns_setup();
 #endif
 
-
 #if (USE_OTA == 1)
     co_handle_t handle;
     co_config_t config = {
@@ -130,9 +133,9 @@ void app_main() {
     xTaskCreate(DAP_Thread, "DAP_Task", 2048, NULL, 10, &kDAPTaskHandle);
 
 #if defined CONFIG_IDF_TARGET_ESP8266
-    #define UART_BRIDGE_TASK_STACK_SIZE 1024
+#define UART_BRIDGE_TASK_STACK_SIZE 1024
 #else
-    #define UART_BRIDGE_TASK_STACK_SIZE 2048
+#define UART_BRIDGE_TASK_STACK_SIZE 2048
 #endif
 
     //// FIXME: potential stack overflow
